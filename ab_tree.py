@@ -53,53 +53,19 @@ class ABTree:
             node = node.children[i]
         return False
 
-    def insertRecursive(self, subRoot, key, left, right, middle):
-        # Jsem v listu
-        if subRoot is None:
-            return key, None, None
+   
+    def insert(self, key):
+        """Add a given key to the tree, unless already present."""
+        left = None
+        right = None
+        value = None
 
-        # Jestlize je hodnota pritomna, nedelej nic
-
-        result = False
-        position = 0
-        result, position = subRoot.find_branch(key)
-
-        if result:
-            return None, None, None
-        myNewNode = subRoot.children[position]
-        middle, left, right = self.insertRecursive(myNewNode, key, left, right, middle)
-
-        if middle is None:
-            return None, left, right
-
-        elif left is None and right is None:
-            subRoot.insert_branch(position, key, None)
-        else:
-            subRoot.insert_branch(position, middle, right)
-
-        if len(subRoot.keys) == self.b:
-            indexSplit = int((self.b - 1) / 2)
-            middle = subRoot.keys[indexSplit]
-
-            right = ABNode()
-            for i in range(indexSplit + 1, len(subRoot.keys) - 1):
-                right.keys.append(subRoot.keys[i])
-            for i in range(indexSplit + 1, len(subRoot.children) - 1):
-                right.children.append(subRoot.children[i])
-
-            for i in range(len(subRoot.keys) - 1, indexSplit + 1):
-                del (subRoot.keys[i])
-            for i in range(len(subRoot.children) - 1, indexSplit + 1):
-                del (subRoot.children[i])
-
-            left = subRoot
-        else:
-            left = None
-            right = None
-            middle = None
-
-        return middle, left, right
-
+        if self.root is None:
+            self.root = ABNode()
+            self.root.append(key)
+            return
+        value, left, right = self.insertRecursive(self.root, key, left, right, value)
+        
     def insert(self, key):
         """Add a given key to the tree, unless already present."""
         left = None
